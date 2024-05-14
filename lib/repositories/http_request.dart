@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:flutter_todo/src/models/todo_model.dart';
+import 'package:flutter_todo_bloc/models/todo_model.dart';
 import 'package:http/http.dart' as http;
 
 class HttpRequest {
