@@ -5,9 +5,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_todo_bloc/models/todo_model.dart';
 import 'package:flutter_todo_bloc/repositories/todo_list.dart';
 
-abstract class TodoListEvent {}
+sealed class TodoListEvent extends Equatable {}
 
-class LoadTodoListEvent extends TodoListEvent {}
+class LoadTodoListEvent extends TodoListEvent {
+  @override
+  List<Object?> get props => [];
+}
 
 // List state
 @immutable
