@@ -7,7 +7,7 @@ import 'package:flutter_todo_bloc/repositories/todo_list.dart';
 
 sealed class TodoListEvent extends Equatable {}
 
-class LoadTodoListEvent extends TodoListEvent {
+class TodoListLoaded extends TodoListEvent {
   @override
   List<Object?> get props => [];
 }
@@ -33,9 +33,7 @@ class TodoListLoadedState extends TodoListState {
 }
 
 class TodoListErrorState extends TodoListState {
-  TodoListErrorState({this.error});
-
-  final Error? error;
+  TodoListErrorState();
 
   @override
   List<Object?> get props => [];
@@ -43,14 +41,18 @@ class TodoListErrorState extends TodoListState {
 
 class TodoListBloc extends Bloc<TodoListEvent, TodoListState> {
   TodoListBloc() : super(TodoListInitialState()) {
-    on<LoadTodoListEvent>(
-      (event, emit) {
-        final repository = TodoListRepository();
-        repository
-            .fetchTodoList()
-            .then((value) => emit(TodoListLoadedState(todoList: value ?? [])))
-            .catchError((error) => emit(TodoListErrorState(error: error)));
-      },
-    );
+    on<TodoListLoaded>(_onFetchTodoList);
+  }
+
+  Future<void> _onFetchTodoList(
+      TodoListEvent event, Emitter<TodoListState> emit) async {
+    emit(TodoListInitialState());
+    try {
+      final repository = TodoListRepository();
+      final result = await repository.fetchTodoList();
+      emit(TodoListLoadedState(todoList: result ?? []));
+    } catch (error) {
+      emit(TodoListErrorState());
+    }
   }
 }

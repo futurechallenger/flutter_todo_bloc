@@ -1,22 +1,28 @@
 import 'package:equatable/equatable.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:flutter/widgets.dart';
+import 'package:json_annotation/json_annotation.dart';
 
-part 'todo_model.freezed.dart';
 part 'todo_model.g.dart';
 
 @immutable
-@freezed
-class TodoItem extends Equatable with _$TodoItem {
-  const factory TodoItem({
-    int? id,
-    required String content,
-    String? note,
-    int? deleted,
-    int? status,
-  }) = _TodoItem;
+@JsonSerializable()
+class TodoItem extends Equatable {
+  const TodoItem({
+    this.id,
+    required this.content,
+    this.note,
+    this.deleted,
+    this.status,
+  });
 
-  factory TodoItem.fromJson(Map<String, dynamic> json) =>
-      _$TodoItemFromJson(json);
+  final int? id;
+  final String? content;
+  final String? note;
+  final int? deleted;
+  final int? status;
+
+  static fromJson(Map<String, dynamic> json) => _$TodoItemFromJson(json);
+  Map<String, dynamic> toJson() => _$TodoItemToJson(this);
 
   @override
   List<Object?> get props => [id, content, note, deleted, status];
