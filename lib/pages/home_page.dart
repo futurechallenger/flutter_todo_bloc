@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_todo_bloc/bloc/home_bloc.dart';
+import 'package:flutter_todo_bloc/views/list_row.dart';
 import 'package:go_router/go_router.dart';
 
 class HomePage extends StatelessWidget {
@@ -26,13 +27,28 @@ class HomePage extends StatelessWidget {
               child: CircularProgressIndicator(),
             );
           case TodoListLoadedState():
-            // TODO: list for todo list
-            return Center(
-              child: ElevatedButton(
-                  onPressed: () {
-                    context.push("/edit");
-                  },
-                  child: const Text("Home")),
+            return ListView.separated(
+              restorationId: 'sampleItemListView',
+              itemCount: state.todoList.length,
+              itemBuilder: (BuildContext context, int index) {
+                final item = state.todoList[index];
+
+                return ListRow(
+                    content: item.content ?? '',
+                    navigateTo: () async {
+                      // final result = await Navigator.of(context)
+                      //     .push(MaterialPageRoute(
+                      //   builder: (builder) => DetailPage(
+                      //     todoItem: item,
+                      //   ),
+                      // ));
+                      // debugPrint("result from prev page is $result");
+                      // if (result == 'refresh') {
+                      //   controller.fetchTodoList();
+                      // }
+                    });
+              },
+              separatorBuilder: (context, index) => const Divider(),
             );
           case TodoListErrorState():
             return const Center(
