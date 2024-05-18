@@ -49,7 +49,7 @@ class TodoListBloc extends Bloc<TodoListEvent, TodoListState> {
     emit(TodoListInitialState());
     try {
       final repository = TodoListRepository();
-      final result = await repository.fetchTodoList();
+      final result = await repository.fetchTodoList(all: true);
       emit(TodoListLoadedState(todoList: result ?? []));
     } catch (error) {
       emit(TodoListErrorState());
