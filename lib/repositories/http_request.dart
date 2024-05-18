@@ -4,7 +4,7 @@ import 'package:flutter_todo_bloc/models/todo_model.dart';
 import 'package:http/http.dart' as http;
 
 class HttpRequest {
-  final String hostUrl = 'http://localhost:17788';
+  final String hostUrl = 'http://192.168.1.2:17788';
   var _client = http.Client();
 
   set client(c) => _client = c;

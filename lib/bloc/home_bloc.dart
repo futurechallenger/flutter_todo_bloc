@@ -7,7 +7,7 @@ import 'package:flutter_todo_bloc/repositories/todo_list.dart';
 
 sealed class TodoListEvent extends Equatable {}
 
-class TodoListLoaded extends TodoListEvent {
+class TodoListRequested extends TodoListEvent {
   @override
   List<Object?> get props => [];
 }
@@ -41,7 +41,7 @@ class TodoListErrorState extends TodoListState {
 
 class TodoListBloc extends Bloc<TodoListEvent, TodoListState> {
   TodoListBloc() : super(TodoListInitialState()) {
-    on<TodoListLoaded>(_onFetchTodoList);
+    on<TodoListRequested>(_onFetchTodoList);
   }
 
   Future<void> _onFetchTodoList(
