@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_todo_bloc/bloc/todo_detail_cubit.dart';
 
 class EditPage extends StatelessWidget {
   const EditPage({super.key});
@@ -9,8 +11,12 @@ class EditPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Editing'),
       ),
-      body: const Center(
-        child: Text("Edit Page"),
+      body: BlocBuilder<TodoDetailCubit, TodoDetailState>(
+        builder: (context, state) {
+          return Center(
+            child: Text(state.todoItem?.content ?? ""),
+          );
+        },
       ),
     );
   }

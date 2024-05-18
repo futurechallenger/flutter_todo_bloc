@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_todo_bloc/bloc/home_bloc.dart';
+import 'package:flutter_todo_bloc/bloc/todo_detail_cubit.dart';
 import 'package:flutter_todo_bloc/pages/edit_page.dart';
 import 'package:flutter_todo_bloc/pages/home_page.dart';
 import 'package:flutter_todo_bloc/pages/settings_page.dart';
@@ -11,6 +12,7 @@ void main() {
     BlocProvider<TodoListBloc>(
         create: (BuildContext context) =>
             TodoListBloc()..add(TodoListRequested())),
+    BlocProvider<TodoDetailCubit>(create: (_) => TodoDetailCubit()),
   ], child: const MyApp()));
 }
 
