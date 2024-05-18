@@ -1,11 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_todo_bloc/bloc/home_bloc.dart';
 import 'package:flutter_todo_bloc/pages/edit_page.dart';
 import 'package:flutter_todo_bloc/pages/home_page.dart';
 import 'package:flutter_todo_bloc/pages/settings_page.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MultiBlocProvider(providers: [
+    BlocProvider<TodoListBloc>(
+        create: (BuildContext context) =>
+            TodoListBloc()..add(TodoListRequested())),
+  ], child: const MyApp()));
 }
 
 class MyApp extends StatelessWidget {
