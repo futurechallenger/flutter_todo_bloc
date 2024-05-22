@@ -12,7 +12,8 @@ final class TodoDetailState extends Equatable {
 }
 
 class TodoDetailCubit extends Cubit<TodoDetailState> {
-  TodoDetailCubit() : super(const TodoDetailState());
+  TodoDetailCubit({required TodoItem todo})
+      : super(TodoDetailState(todoItem: todo));
 
   void setTodo(TodoItem todo) => emit(TodoDetailState(todoItem: todo));
 }

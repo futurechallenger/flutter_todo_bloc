@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_todo_bloc/bloc/home_bloc.dart';
-import 'package:flutter_todo_bloc/bloc/todo_detail_cubit.dart';
 import 'package:flutter_todo_bloc/views/list_row.dart';
 import 'package:go_router/go_router.dart';
 
@@ -37,8 +36,10 @@ class HomePage extends StatelessWidget {
                 return ListRow(
                     content: item.content ?? '',
                     navigateTo: () async {
-                      context.read<TodoDetailCubit>().setTodo(item);
-                      context.push("/edit");
+                      // WARNING: don't do this
+                      // context.read<TodoDetailCubit>().setTodo(item);
+
+                      context.push("/edit", extra: item);
                     });
               },
               separatorBuilder: (context, index) => const Divider(),
