@@ -71,8 +71,8 @@ class HttpRequest {
     }
   }
 
-  Future<void> updateTodo(int id, String todoTitle,
-      {String? note, int? status, int? deleted}) async {
+  Future<void> updateTodo(int id,
+      {String? todoTitle, String? note, int? status, int? deleted}) async {
     final response = await _client.post(Uri.parse("$hostUrl/update"),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8'
