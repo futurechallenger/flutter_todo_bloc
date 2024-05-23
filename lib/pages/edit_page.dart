@@ -14,6 +14,11 @@ class EditPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Editing'),
+        actions: [
+          TextButton(
+              onPressed: () {},
+              child: Text(todo?.status == 0 ? "Complete" : "In progress"))
+        ],
       ),
       body: Center(
         child: Text(todo?.content ?? ""),
