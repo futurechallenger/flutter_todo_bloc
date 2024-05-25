@@ -2,20 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_todo_bloc/bloc/home_bloc.dart';
 import 'package:flutter_todo_bloc/bloc/todo_detail_cubit.dart';
+import 'package:flutter_todo_bloc/bloc/todo_toggle_bloc.dart';
 import 'package:flutter_todo_bloc/models/todo_model.dart';
 import 'package:flutter_todo_bloc/pages/edit_page.dart';
 import 'package:flutter_todo_bloc/pages/home_page.dart';
 import 'package:flutter_todo_bloc/pages/settings_page.dart';
+import 'package:flutter_todo_bloc/repositories/todo_detail.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
-  runApp(MultiBlocProvider(providers: [
-    BlocProvider<TodoListBloc>(
-        create: (BuildContext context) =>
-            TodoListBloc()..add(TodoListRequested())),
-    // BlocProvider<TodoDetailCubit>(
-    //     create: (_) => TodoDetailCubit(const TodoDetailState())),
-  ], child: const MyApp()));
+  runApp(
+    MultiRepositoryProvider(
+        providers: [
+          RepositoryProvider(
+              create: (BuildContext context) => TodoDetailRepository())
+        ],
+        child: MultiBlocProvider(providers: [
+          BlocProvider<TodoListBloc>(
+              create: (BuildContext context) =>
+                  TodoListBloc()..add(TodoListRequested())),
+          // BlocProvider<TodoDetailCubit>(
+          //     create: (_) => TodoDetailCubit(const TodoDetailState())),
+        ], child: const MyApp())),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -35,10 +44,22 @@ class MyApp extends StatelessWidget {
         GoRoute(
             path: "/edit",
             builder: (context, state) {
-              return BlocProvider(
-                  create: (context) =>
-                      TodoDetailCubit(todo: state.extra as TodoItem),
-                  child: const EditPage());
+              final todo = state.extra as TodoItem;
+              return MultiBlocProvider(
+                providers: [
+                  BlocProvider(
+                    create: (context) => TodoDetailCubit(todo: todo),
+                  ),
+                  BlocProvider(
+                      create: (context) => TodoToggleBloc(
+                          todoDetailRepository:
+                              // RepositoryProvider.of<TodoDetailRepository>(
+                              //     context),
+                              context.read<TodoDetailRepository>(),
+                          todo: todo))
+                ],
+                child: const EditPage(),
+              );
             }),
         GoRoute(path: "/settings", builder: (_, __) => const SettingsPage()),
       ]),
