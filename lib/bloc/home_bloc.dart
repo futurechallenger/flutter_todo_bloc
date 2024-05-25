@@ -12,47 +12,68 @@ class TodoListRequested extends TodoListEvent {
   List<Object?> get props => [];
 }
 
-// List state
-@immutable
-sealed class TodoListState extends Equatable {}
+class TodoItemUpdated extends TodoListEvent {
+  TodoItemUpdated({required this.todo});
 
-class TodoListInitialState extends TodoListState {
-  final todoList = [];
+  final TodoItem todo;
 
   @override
-  List<Object?> get props => [];
+  List<Object?> get props => [todo];
 }
 
-class TodoListLoadedState extends TodoListState {
-  TodoListLoadedState({this.todoList = const <TodoItem>[]});
+// List state
+@immutable
+sealed class TodoListState extends Equatable {
+  const TodoListState({required this.todoList});
 
   final List<TodoItem> todoList;
-
   @override
   List<Object?> get props => [todoList];
 }
 
+class TodoListInitialState extends TodoListState {
+  const TodoListInitialState() : super(todoList: const <TodoItem>[]);
+}
+
+class TodoListLoadedState extends TodoListState {
+  const TodoListLoadedState({required super.todoList});
+}
+
 class TodoListErrorState extends TodoListState {
-  TodoListErrorState();
+  const TodoListErrorState() : super(todoList: const <TodoItem>[]);
 
   @override
   List<Object?> get props => [];
 }
 
 class TodoListBloc extends Bloc<TodoListEvent, TodoListState> {
-  TodoListBloc() : super(TodoListInitialState()) {
+  TodoListBloc() : super(const TodoListInitialState()) {
     on<TodoListRequested>(_onFetchTodoList);
+    on<TodoItemUpdated>(_onTodoItemUpdated);
   }
 
   Future<void> _onFetchTodoList(
       TodoListEvent event, Emitter<TodoListState> emit) async {
-    emit(TodoListInitialState());
+    emit(const TodoListInitialState());
     try {
       final repository = TodoListRepository();
       final result = await repository.fetchTodoList(all: true);
       emit(TodoListLoadedState(todoList: result ?? []));
     } catch (error) {
-      emit(TodoListErrorState());
+      emit(const TodoListErrorState());
     }
+  }
+
+  void _onTodoItemUpdated(TodoItemUpdated event, Emitter<TodoListState> emit) {
+    final todo = event.todo;
+    final todoList = state.todoList.map((TodoItem el) {
+      if (el.id == todo.id) {
+        return todo;
+      } else {
+        return el;
+      }
+    });
+
+    emit(TodoListLoadedState(todoList: todoList.toList()));
   }
 }
