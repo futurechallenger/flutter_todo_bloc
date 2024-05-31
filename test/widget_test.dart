@@ -9,6 +9,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 import 'package:flutter_todo_bloc/main.dart';
+import 'package:flutter_todo_bloc/repositories/http_request.dart';
+import 'package:mocktail/mocktail.dart';
+
+class MockService extends Mock implements HttpRequest {}
 
 void main() {
   testWidgets('Counter increments smoke test', (WidgetTester tester) async {

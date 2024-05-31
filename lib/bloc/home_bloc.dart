@@ -47,17 +47,19 @@ class TodoListErrorState extends TodoListState {
 }
 
 class TodoListBloc extends Bloc<TodoListEvent, TodoListState> {
-  TodoListBloc() : super(const TodoListInitialState()) {
+  TodoListBloc({required this.todoListRepository})
+      : super(const TodoListInitialState()) {
     on<TodoListRequested>(_onFetchTodoList);
     on<TodoItemUpdated>(_onTodoItemUpdated);
   }
+
+  final TodoListRepository todoListRepository;
 
   Future<void> _onFetchTodoList(
       TodoListEvent event, Emitter<TodoListState> emit) async {
     emit(const TodoListInitialState());
     try {
-      final repository = TodoListRepository();
-      final result = await repository.fetchTodoList(all: true);
+      final result = await todoListRepository.fetchTodoList(all: true);
       emit(TodoListLoadedState(todoList: result ?? []));
     } catch (error) {
       emit(const TodoListErrorState());
