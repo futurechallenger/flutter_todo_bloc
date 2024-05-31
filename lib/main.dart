@@ -8,6 +8,7 @@ import 'package:flutter_todo_bloc/pages/edit_page.dart';
 import 'package:flutter_todo_bloc/pages/home_page.dart';
 import 'package:flutter_todo_bloc/pages/settings_page.dart';
 import 'package:flutter_todo_bloc/repositories/todo_detail.dart';
+import 'package:flutter_todo_bloc/repositories/todo_list.dart';
 import 'package:go_router/go_router.dart';
 
 void main() {
@@ -15,12 +16,16 @@ void main() {
     MultiRepositoryProvider(
         providers: [
           RepositoryProvider(
-              create: (BuildContext context) => TodoDetailRepository())
+              create: (BuildContext context) => TodoDetailRepository()),
+          RepositoryProvider(
+              create: (BuildContext context) => TodoListRepository())
         ],
         child: MultiBlocProvider(providers: [
           BlocProvider<TodoListBloc>(
-              create: (BuildContext context) =>
-                  TodoListBloc()..add(TodoListRequested())),
+              create: (BuildContext context) => TodoListBloc(
+                  todoListRepository:
+                      RepositoryProvider.of<TodoListRepository>(context))
+                ..add(TodoListRequested())),
           // BlocProvider<TodoDetailCubit>(
           //     create: (_) => TodoDetailCubit(const TodoDetailState())),
         ], child: const MyApp())),
